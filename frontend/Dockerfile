@@ -15,8 +15,9 @@ RUN npm install
 # Copy application code
 COPY . .
 
-# Create non-root user
-RUN addgroup -g 1000 appuser && adduser -u 1000 -G appuser -s /bin/sh -D appuser
+# Create non-root user (handle existing group)
+RUN addgroup -g 1001 appuser || true
+RUN adduser -u 1001 -G appuser -s /bin/sh -D appuser 2>/dev/null || adduser -u 1001 -g 1001 -s /bin/sh -D appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 
