@@ -10,17 +10,22 @@ import {
   Avatar
 } from '@mui/material';
 import {
+  Menu as MenuIcon,
   Notifications as NotificationsIcon,
   Settings as SettingsIcon,
-  Refresh as RefreshIcon,
+  Brightness4 as DarkModeIcon,
+  Brightness7 as LightModeIcon,
   RssFeed as RssFeedIcon,
+  Refresh as RefreshIcon,
   AccountCircle as AccountIcon
 } from '@mui/icons-material';
+import { useTheme } from '../contexts/ThemeContext';
 import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
 
 const Navbar = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
   const queryClient = useQueryClient();
 
   // Get feed stats for notifications
@@ -111,6 +116,20 @@ const Navbar = () => {
               }}
             >
               <RefreshIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={darkMode ? "Modo Claro" : "Modo Escuro"}>
+            <IconButton 
+              color="inherit" 
+              onClick={toggleDarkMode}
+              sx={{ 
+                '&:hover': { 
+                  backgroundColor: 'rgba(255,255,255,0.1)' 
+                } 
+              }}
+            >
+              {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
           </Tooltip>
 
