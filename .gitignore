@@ -1,0 +1,83 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker volumes
+postgres_data/
+redis_data/
+
+# SENSITIVE DATA - DO NOT COMMIT
+# API Keys stored locally
+frontend/src/data/api-keys.json
+backend/data/api-keys.json
+**/api-keys.json
+
+# Login sessions and cookies
+frontend/src/data/sessions.json
+backend/data/sessions.json
+frontend/src/data/cookies.json
+backend/data/cookies.json
+**/sessions.json
+**/cookies.json
+
+# RSS Feed data
+frontend/src/data/feeds.json
+backend/data/feeds.json
+backend/data/rss-cache/
+**/feeds.json
+**/rss-cache/
+
+# User data
+backend/data/user-data/
+frontend/localStorage.json
+
+# Backup files
+*.backup
+*.bak
+
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+temp/
+tmp/
