@@ -2,6 +2,11 @@
 
 > **Note: This application is currently under development** 🚧
 
+**Built with**: AI for syntax | Human for logic | Learning clean, scalable code  
+All repos public to show my evolution as a developer 📈
+
+---
+
 ## Overview
 
 AI FeedRSS is an intelligent RSS feed management application that leverages artificial intelligence to organize and filter RSS feeds automatically. The application is designed to handle bulk RSS feed imports and provide smart categorization, filtering, and content recommendations.
