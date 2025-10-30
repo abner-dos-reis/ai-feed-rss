@@ -17,79 +17,74 @@ import { Close as CloseIcon, RssFeed as FeedIcon } from '@mui/icons-material';
 const AddFeedModal = ({ open, onClose, onSave }) => {
   const [feedUrl, setFeedUrl] = useState('');
   const [feedName, setFeedName] = useState('');
-  const [customName, setCustomName] = useState('');
   const [autoDetectedName, setAutoDetectedName] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchFeedTitle = async (url) => {
-    setLoading(true);
+  const detectFeedName = async (url) => {
+    if (!url.trim()) return;
+
+    setIsDetecting(true);
     setError('');
+
     try {
       // Fetch the RSS feed
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch feed');
+      }
+
       const text = await response.text();
-      
-      // Parse XML to get title
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, 'text/xml');
-      
-      // Try different RSS/Atom formats
+
+      // Check for parsing errors
+      const parseError = xmlDoc.querySelector('parsererror');
+      if (parseError) {
+        throw new Error('Invalid RSS feed format');
+      }
+
+      // Try to get title from RSS 2.0 or Atom feed
       let title = xmlDoc.querySelector('channel > title')?.textContent ||
                   xmlDoc.querySelector('feed > title')?.textContent ||
-                  xmlDoc.querySelector('title')?.textContent ||
                   '';
-      
+
       if (title) {
         setAutoDetectedName(title.trim());
-        setFeedName(title.trim());
       } else {
-        setAutoDetectedName('');
-        setFeedName('Unnamed Feed');
+        setError('Could not detect feed name from URL');
       }
     } catch (err) {
-      console.error('Failed to fetch feed title:', err);
-      setError('Could not fetch feed title. You can enter it manually.');
-      setAutoDetectedName('');
-      setFeedName('Unnamed Feed');
+      console.error('Error detecting feed name:', err);
+      setError('Failed to auto-detect feed name. Please enter manually.');
     } finally {
-      setLoading(false);
+      setIsDetecting(false);
     }
   };
 
-  const handleUrlChange = (url) => {
+  const handleUrlChange = (e) => {
+    const url = e.target.value;
     setFeedUrl(url);
-    setError('');
+    setAutoDetectedName('');
     
-    // Auto-fetch title when URL looks valid
-    if (url.trim() && (url.startsWith('http://') || url.startsWith('https://'))) {
-      // Debounce the fetch
-      const timeoutId = setTimeout(() => {
-        if (!customName) { // Only auto-fetch if user hasn't entered custom name
-          fetchFeedTitle(url.trim());
-        }
-      }, 800);
-      
-      return () => clearTimeout(timeoutId);
-    }
-  };
-
-  const handleCustomNameChange = (name) => {
-    setCustomName(name);
-    if (name.trim()) {
-      setFeedName(name.trim());
-    } else {
-      setFeedName(autoDetectedName || 'Unnamed Feed');
+    // Auto-detect when URL looks complete
+    if (url.includes('http') && (url.includes('rss') || url.includes('feed') || url.includes('xml'))) {
+      detectFeedName(url);
     }
   };
 
   const handleSave = () => {
     if (feedUrl.trim()) {
-      const finalName = customName.trim() || autoDetectedName || 'Unnamed Feed';
+      const finalName = feedName.trim() || autoDetectedName || 'Unnamed Feed';
       onSave({ url: feedUrl, name: finalName });
       setFeedUrl('');
       setFeedName('');
-      setCustomName('');
       setAutoDetectedName('');
       setError('');
       onClose();
@@ -99,7 +94,6 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
   const handleClose = () => {
     setFeedUrl('');
     setFeedName('');
-    setCustomName('');
     setAutoDetectedName('');
     setError('');
     onClose();
@@ -132,43 +126,43 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
       
       <DialogContent>
         <Box sx={{ pt: 2 }}>
-          {error && (
-            <Alert severity="warning" sx={{ mb: 2 }} onClose={() => setError('')}>
-              {error}
-            </Alert>
-          )}
-
           <TextField
             fullWidth
             label="Feed URL"
             placeholder="https://example.com/rss or http://127.0.0.1:8895/api/rss/20"
             value={feedUrl}
-            onChange={(e) => handleUrlChange(e.target.value)}
+            onChange={handleUrlChange}
             required
-            sx={{ mb: 3 }}
             helperText="Enter the complete RSS feed URL"
+            sx={{ mb: 2 }}
             InputProps={{
-              endAdornment: loading && <CircularProgress size={20} />
+              endAdornment: isDetecting && (
+                <CircularProgress size={20} sx={{ color: '#3b82f6' }} />
+              )
             }}
           />
 
-          {autoDetectedName && (
+          {autoDetectedName && !feedName && (
             <Alert severity="success" sx={{ mb: 2 }}>
-              Feed detected: <strong>{autoDetectedName}</strong>
+              <Typography variant="body2">
+                <strong>Detected feed name:</strong> {autoDetectedName}
+              </Typography>
+            </Alert>
+          )}
+
+          {error && (
+            <Alert severity="warning" sx={{ mb: 2 }} onClose={() => setError('')}>
+              {error}
             </Alert>
           )}
           
           <TextField
             fullWidth
-            label="Custom Name (optional)"
-            placeholder="Leave empty to use auto-detected name"
-            value={customName}
-            onChange={(e) => handleCustomNameChange(e.target.value)}
-            helperText={
-              autoDetectedName 
-                ? `Auto-detected: "${autoDetectedName}". Enter a custom name to override.`
-                : "Custom name for this feed"
-            }
+            label="Custom Feed Name (optional)"
+            placeholder="Override detected name"
+            value={feedName}
+            onChange={(e) => setFeedName(e.target.value)}
+            helperText={autoDetectedName && !feedName ? `Will use: "${autoDetectedName}"` : 'Leave empty to use auto-detected name'}
           />
         </Box>
       </DialogContent>
@@ -180,7 +174,7 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
         <Button 
           onClick={handleSave} 
           variant="contained"
-          disabled={!feedUrl.trim() || loading}
+          disabled={!feedUrl.trim() || isDetecting}
           sx={{ 
             backgroundColor: '#3b82f6',
             '&:hover': {
