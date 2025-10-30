@@ -33,6 +33,86 @@ The application supports filtering RSS feeds based on their origin source:
 - **Summary Generation**: Automatically generates summaries of articles and content
 - **Smart Filtering**: Advanced filtering options by source, category, date, and relevance
 
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker and Docker Compose
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/abner-dos-reis/ai-feed-rss.git
+   cd ai-feed-rss
+   ```
+
+2. **Set up environment**
+   ```bash
+   make install  # Creates .env file from template
+   # Edit .env file with your configuration
+   ```
+
+3. **Start development environment**
+   ```bash
+   make dev  # Builds and starts all services
+   ```
+
+### Services and Ports
+
+- **Frontend**: http://localhost:7200 (React.js)
+- **Backend API**: http://localhost:7201 (FastAPI)
+- **Nginx Proxy**: http://localhost:7204 (Reverse proxy)
+- **Database**: localhost:7202 (PostgreSQL)
+- **Redis**: localhost:7203 (Cache)
+
+### Available Commands
+
+```bash
+make help          # Show all available commands
+make up            # Start all services
+make down          # Stop all services
+make logs          # Show logs from all services
+make db-shell      # Connect to database
+make test          # Run all tests
+make clean         # Clean up Docker resources
+```
+
+## Development
+
+### Project Structure
+```
+ai-feed-rss/
+├── backend/           # FastAPI backend
+├── frontend/          # React.js frontend
+├── database/          # PostgreSQL init scripts
+├── nginx/             # Nginx configuration
+├── docker-compose.yml # Docker services
+├── Makefile          # Development commands
+└── .env              # Environment variables
+```
+
+### Backend (FastAPI)
+- **Framework**: FastAPI with async support
+- **Database**: PostgreSQL with SQLAlchemy
+- **Cache**: Redis for session and data caching
+- **AI Integration**: OpenAI GPT and Transformers
+- **Background Tasks**: Celery for RSS fetching
+
+### Frontend (React.js)
+- **Framework**: React 18 with hooks
+- **UI Library**: Material-UI (MUI)
+- **State Management**: React Query
+- **Styling**: Styled Components + Emotion
+- **Forms**: React Hook Form
+
+### Database Schema
+- Users and authentication
+- RSS sources and items
+- AI-generated categories and summaries
+- Reading history and preferences
+- Background processing queue
+
 ## Planned Features
 
 - [ ] Bulk RSS feed import functionality
