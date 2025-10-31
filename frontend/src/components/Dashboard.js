@@ -25,8 +25,10 @@ import {
   Language as SiteIcon,
   Category as CategoryIcon,
   ExpandMore as ExpandIcon,
-  Refresh as RefreshIcon
+  Refresh as RefreshIcon,
+  CheckCircle as CheckIcon
 } from '@mui/icons-material';
+import FeedArticlesModal from './FeedArticlesModal';
 
 const Dashboard = ({ feeds = [] }) => {
   const [activeView, setActiveView] = useState('all');
@@ -35,6 +37,8 @@ const Dashboard = ({ feeds = [] }) => {
   const [selectedSite, setSelectedSite] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState({});
   const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const [articlesModalOpen, setArticlesModalOpen] = useState(false);
+  const [selectedFeed, setSelectedFeed] = useState(null);
   const [userPreferences, setUserPreferences] = useState({
     topics: [],
     customTopics: ''
@@ -98,7 +102,7 @@ const Dashboard = ({ feeds = [] }) => {
                   >
                     {feed.url}
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Chip 
                       label="Active" 
                       size="small" 
@@ -114,6 +118,29 @@ const Dashboard = ({ feeds = [] }) => {
                         fontWeight: 600
                       }}
                     />
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        setSelectedFeed(feed);
+                        setArticlesModalOpen(true);
+                      }}
+                      sx={{
+                        color: '#10b981',
+                        borderColor: '#10b981',
+                        fontSize: '0.75rem',
+                        py: 0.5,
+                        px: 1.5,
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        '&:hover': {
+                          borderColor: '#10b981',
+                          backgroundColor: 'rgba(16, 185, 129, 0.1)'
+                        }
+                      }}
+                    >
+                      Check
+                    </Button>
                   </Box>
                 </CardContent>
               </Card>
@@ -502,6 +529,16 @@ const Dashboard = ({ feeds = [] }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Feed Articles Modal */}
+      <FeedArticlesModal
+        open={articlesModalOpen}
+        onClose={() => {
+          setArticlesModalOpen(false);
+          setSelectedFeed(null);
+        }}
+        feed={selectedFeed}
+      />
     </Box>
   );
 };

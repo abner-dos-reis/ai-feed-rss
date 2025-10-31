@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import Response
 from contextlib import asynccontextmanager
+from pydantic import BaseModel
 import asyncio
+import httpx
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db, init_db
 from routers import rss, ai_apis, feeds, topics
@@ -98,6 +101,42 @@ async def health_check():
             "rss_processor": "running"
         }
     }
+
+# RSS Proxy endpoint to bypass CORS
+class FeedRequest(BaseModel):
+    url: str
+
+@app.post("/api/rss-proxy")
+async def rss_proxy(request: FeedRequest):
+    """
+    Proxy endpoint to fetch RSS feeds and bypass CORS restrictions
+    """
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.get(
+                request.url,
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (compatible; AI-Feed-RSS/1.0)',
+                    'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml'
+                },
+                follow_redirects=True
+            )
+            response.raise_for_status()
+            
+            return Response(
+                content=response.content,
+                media_type="application/xml",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Content-Type": "application/xml; charset=utf-8"
+                }
+            )
+    except httpx.HTTPError as e:
+        logger.error(f"Error fetching RSS feed {request.url}: {e}")
+        raise HTTPException(status_code=502, detail=f"Failed to fetch RSS feed: {str(e)}")
+    except Exception as e:
+        logger.error(f"Unexpected error in RSS proxy: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

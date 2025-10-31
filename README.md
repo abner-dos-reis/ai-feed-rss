@@ -1,6 +1,7 @@
 # AI FeedRSS
 
-> **Note: This application is currently under development** 🚧
+> **⚠️ STILL IN DEVELOPMENT** 🚧  
+> This application is actively being developed. Features may be incomplete or subject to change.
 
 **Built with**: AI for syntax | Human for logic | Learning clean, scalable code  
 All repos public to show my evolution as a developer 📈
@@ -9,35 +10,49 @@ All repos public to show my evolution as a developer 📈
 
 ## Overview
 
-AI FeedRSS is an intelligent RSS feed management application that leverages artificial intelligence to organize and filter RSS feeds automatically. The application is designed to handle bulk RSS feed imports and provide smart categorization, filtering, and content recommendations.
+AI FeedRSS is an intelligent RSS feed aggregator with AI-powered chat assistance. The application provides a modern, dark-themed interface for managing multiple RSS feeds, viewing articles, and interacting with AI assistants to get content recommendations and summaries.
+
+## Screenshots
+
+### Main Dashboard
+![Dashboard Screenshot](public/Screenshot1.png)
+
+### AI Chat Interface
+![AI Chat Screenshot](public/Screenshot2.png)
 
 ## Features
 
-### 🤖 AI-Powered Organization
-- **Smart Categorization**: Automatically organizes RSS feeds into categories and subcategories using AI
-- **Content Analysis**: AI analyzes feed titles and descriptions to provide intelligent reading suggestions
-- **Category-Specific Search**: Search and filter content within specific categories
+### 🤖 AI-Powered Chat Assistant
+- **Multi-Provider Support**: Integrates with OpenAI (GPT-4), Google Gemini, Anthropic Claude, and Perplexity AI
+- **Context-Aware Responses**: AI understands your feeds and provides relevant recommendations
+- **Article Search**: Ask questions about your feed content and get intelligent answers
+- **Chat History**: Persistent conversation history with clear option
 
-### 📊 Source-Based Filtering
-The application supports filtering RSS feeds based on their origin source:
-- 📧 **Email newsletters**
-- 📱 **Social media feeds**
-- 🎥 **YouTube channels**
-- 🌐 **Web feeds**
-- 📰 **News sources**
-- And more...
+### � RSS Feed Management
+- **Single & Bulk Import**: Add one feed or multiple feeds at once via URL list
+- **Auto-Detection**: Automatically detects feed names and item counts
+- **CORS Proxy**: Backend proxy handles RSS fetching to bypass browser restrictions
+- **Article Viewer**: View all articles from a feed in a dedicated modal
+- **Search & Filter**: Search articles by title/description
 
-### 📝 Content Management
-- **Bulk RSS Import**: Add multiple RSS feed links at once
-- **Reading Recommendations**: AI suggests what to read based on your preferences and reading history
-- **Summary Generation**: Automatically generates summaries of articles and content
-- **Smart Filtering**: Advanced filtering options by source, category, date, and relevance
+### � Smart Dashboard Views
+- **Hot Feeds**: View feeds matching your interest preferences
+- **All Feeds**: Browse all your subscribed feeds
+- **By Site**: Filter feeds grouped by source website
+- **By Category**: AI-organized category filtering (coming soon)
+
+### 🎨 Modern UI/UX
+- **Dark Theme**: Comfortable dark mode interface (#0f0f0f background)
+- **Orange Accents**: Vibrant orange (#f59e0b) highlights and interactive elements
+- **Retractable Sidebar**: Clean navigation with Dashboard, Feed Management, API Management, Login Sessions, and Config
+- **Responsive Design**: Material-UI components optimized for all screen sizes
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Docker and Docker Compose
 - Git
+- At least one AI API key (OpenAI, Google Gemini, Anthropic, or Perplexity)
 
 ### Installation
 
@@ -58,13 +73,23 @@ The application supports filtering RSS feeds based on their origin source:
    make dev  # Builds and starts all services
    ```
 
+4. **Configure AI APIs**
+   - Open the application at http://localhost:7200
+   - Click on "Manage APIs" in the sidebar
+   - Add your API keys for any supported provider (OpenAI, Gemini, Claude, or Perplexity)
+
+5. **Add RSS Feeds**
+   - Click "Add Feed" in the sidebar
+   - Enter a single RSS feed URL or bulk import multiple URLs
+   - The system will auto-detect feed names and item counts
+
 ### Services and Ports
 
-- **Frontend**: http://localhost:7200 (React.js)
-- **Backend API**: http://localhost:7201 (FastAPI)
+- **Frontend**: http://localhost:7200 (React.js with Material-UI)
+- **Backend API**: http://localhost:7201 (FastAPI with RSS proxy)
 - **Nginx Proxy**: http://localhost:7204 (Reverse proxy)
 - **Database**: localhost:7202 (PostgreSQL)
-- **Redis**: localhost:7203 (Cache)
+- **Redis**: localhost:7203 (Cache layer)
 
 ### Available Commands
 
@@ -78,69 +103,210 @@ make test          # Run all tests
 make clean         # Clean up Docker resources
 ```
 
+## Technology Stack
+
+### Backend
+- **FastAPI**: Modern Python web framework with async support
+- **PostgreSQL**: Relational database for persistent storage
+- **Redis**: Cache layer for session management
+- **httpx**: Async HTTP client for RSS fetching
+- **CORS Middleware**: Handles cross-origin requests
+
+### Frontend
+- **React 18**: Modern React with hooks
+- **Material-UI (MUI)**: Comprehensive UI component library
+- **localStorage**: Client-side persistence for feeds, articles, and API keys
+- **Fetch API**: Native HTTP requests to backend
+
+### AI Integration
+- **OpenAI GPT-4o-mini**: Fast, cost-effective language model
+- **Google Gemini 1.5 Flash**: Google's latest multimodal AI
+- **Anthropic Claude 3 Haiku**: Compact, efficient Claude model
+- **Perplexity AI**: Llama 3.1 Sonar with online search capabilities
+
+### DevOps
+- **Docker**: Containerized services
+- **Docker Compose**: Multi-container orchestration
+- **Nginx**: Reverse proxy and load balancer
+- **Makefile**: Simplified development workflow
+
 ## Development
 
 ### Project Structure
 ```
 ai-feed-rss/
-├── backend/           # FastAPI backend
-├── frontend/          # React.js frontend
-├── database/          # PostgreSQL init scripts
-├── nginx/             # Nginx configuration
-├── docker-compose.yml # Docker services
-├── Makefile          # Development commands
-└── .env              # Environment variables
+├── backend/              # FastAPI backend
+│   ├── main.py          # Main application with RSS proxy endpoint
+│   ├── Dockerfile       # Optimized with COPY --chown
+│   └── requirements.txt # Python dependencies
+├── frontend/            # React.js frontend
+│   ├── src/
+│   │   ├── components/  # UI components
+│   │   │   ├── Dashboard.js         # Main feed dashboard (4 views)
+│   │   │   ├── Sidebar.js           # Navigation + AI chat
+│   │   │   ├── AddFeedModal.js      # Single/bulk feed import
+│   │   │   ├── FeedArticlesModal.js # Article viewer with search
+│   │   │   ├── ManageAPIsModal.js   # API key management
+│   │   │   ├── LoginSessionsModal.js# Session management
+│   │   │   └── ConfigModal.js       # Configuration (placeholder)
+│   │   ├── App.js       # Main app component
+│   │   └── index.js     # Entry point
+│   ├── Dockerfile       # Optimized build
+│   └── package.json     # Node dependencies
+├── database/            # PostgreSQL init scripts
+├── nginx/               # Nginx reverse proxy config
+├── public/              # Screenshots and assets
+├── docker-compose.yml   # 5-service orchestration
+├── Makefile            # Development commands
+├── .env.example        # Environment template
+└── README.md           # This file
 ```
 
-### Backend (FastAPI)
-- **Framework**: FastAPI with async support
-- **Database**: PostgreSQL with SQLAlchemy
-- **Cache**: Redis for session and data caching
-- **AI Integration**: OpenAI GPT and Transformers
-- **Background Tasks**: Celery for RSS fetching
+### Component Architecture
 
-### Frontend (React.js)
-- **Framework**: React 18 with hooks
-- **UI Library**: Material-UI (MUI)
-- **State Management**: React Query
-- **Styling**: Styled Components + Emotion
-- **Forms**: React Hook Form
+**Dashboard.js** (542 lines)
+- Four filter views: Hot, All, By Site, By Category
+- Feed cards with active status, item count badges, and "Check" buttons
+- Opens FeedArticlesModal when clicking Check button
+- Stores feeds in localStorage['feeds']
 
-### Database Schema
-- Users and authentication
-- RSS sources and items
-- AI-generated categories and summaries
-- Reading history and preferences
-- Background processing queue
+**Sidebar.js** (491 lines)
+- Retractable navigation menu with 5 items
+- Integrated AI chat with message history
+- Supports 4 AI providers with automatic fallback
+- System prompt focused on content curation
+- Chat history stored in component state
 
-## Planned Features
+**AddFeedModal.js** (365+ lines)
+- Tab 1: Single feed import with auto-detection
+- Tab 2: Bulk import from multiple URLs
+- RSS proxy integration for CORS handling
+- Auto-saves successful feeds to localStorage
+- Shows success/error results for bulk imports
 
-- [ ] Bulk RSS feed import functionality
-- [ ] AI-based categorization system
-- [ ] Source-based filtering (email, social media, YouTube, etc.)
-- [ ] Content recommendation engine
-- [ ] Summary generation for articles
-- [ ] Category-specific search
+**FeedArticlesModal.js** (350 lines)
+- Loads articles via RSS proxy endpoint
+- Merges new articles with stored articles
+- Search functionality by title/description
+- AI search with article context
+- Persistent storage in localStorage['feedArticles']
+
+**ManageAPIsModal.js**
+- Manages API keys for 4 providers
+- Stores keys in localStorage['aiApiKeys']
+- Validates key format before saving
+- Masked display with show/hide toggle
+
+### Backend API Endpoints
+
+**POST /api/rss-proxy**
+- Fetches RSS feeds server-side to bypass CORS
+- Request: `{ "url": "https://example.com/feed.xml" }`
+- Response: XML content with CORS headers
+- Uses httpx.AsyncClient with 30s timeout
+- Custom User-Agent: 'Mozilla/5.0 (compatible; AI-Feed-RSS/1.0)'
+
+### localStorage Schema
+
+```javascript
+// Feed list
+localStorage['feeds'] = [
+  {
+    id: "unique-id",
+    url: "https://example.com/rss",
+    name: "Feed Name",
+    itemCount: 42,
+    isActive: true
+  }
+]
+
+// Articles by feed URL
+localStorage['feedArticles'] = {
+  "https://example.com/rss": [
+    {
+      title: "Article Title",
+      description: "Article description...",
+      link: "https://example.com/article",
+      pubDate: "2025-10-30T12:00:00Z"
+    }
+  ]
+}
+
+// AI API Keys
+localStorage['aiApiKeys'] = {
+  openai: "sk-...",
+  gemini: "AIza...",
+  claude: "sk-ant-...",
+  perplexity: "pplx-..."
+}
+
+// User preferences for Hot feed
+localStorage['userPreferences'] = {
+  selectedTopics: ["technology", "science"]
+}
+```
+
+## Roadmap
+
+### ✅ Completed Features
+- [x] Docker multi-service architecture (5 containers)
+- [x] Dark theme UI with Material-UI
+- [x] RSS feed management (add, view, manage)
+- [x] Single and bulk feed import
+- [x] Backend RSS proxy to handle CORS
+- [x] AI chat integration (4 providers)
+- [x] Feed article viewer with search
+- [x] AI-powered article search
+- [x] Persistent localStorage for feeds and articles
+- [x] API key management modal
+- [x] Dashboard with multiple filter views (Hot, All, By Site, By Category)
+
+### 🚧 In Progress
+- [ ] AI-based category organization
+- [ ] Feed filtering by category
+- [ ] Config modal functionality
+- [ ] Enhanced error handling and validation
+- [ ] User authentication and sessions
+- [ ] Database persistence (currently localStorage only)
+
+### 📋 Planned Features
+- [ ] Export/import feed configurations
+- [ ] Feed update scheduling
+- [ ] Article bookmarking and favorites
 - [ ] Reading history tracking
-- [ ] Export/import configurations
-- [ ] Mobile-responsive interface
-- [ ] API integration for third-party services
+- [ ] Custom RSS feed creation
+- [ ] Mobile app version
+- [ ] Browser extension
+- [ ] Email digest notifications
+- [ ] Multi-language support
+- [ ] Themes customization
 
-## Technology Stack
+## Known Issues
 
-*Coming soon - Technology stack will be defined during development*
+- RSS feed extraction may fail for some feeds due to varying XML formats
+- AI chat requires at least one configured API key
+- Bulk import processing may be slow for many feeds
+- No data persistence beyond localStorage (cleared on browser cache clear)
+- Category filtering is not yet AI-powered
 
-## Installation
+## Performance Notes
 
-*Installation instructions will be provided once the application is ready for testing*
-
-## Usage
-
-*Usage documentation will be available in future releases*
+- Docker build time optimized using `COPY --chown` instead of `chown -R`
+- Frontend uses React.memo and efficient re-rendering strategies
+- Backend RSS proxy uses async httpx for non-blocking requests
+- localStorage provides instant load times (no API calls on startup)
 
 ## Contributing
 
-This project is currently in early development. Contribution guidelines will be established once the core functionality is implemented.
+This project is currently in active development. Contribution guidelines will be established once the core functionality is stable.
+
+### Development Workflow
+1. Create a feature branch from `main`
+2. Make your changes
+3. Test locally with `make dev`
+4. Commit with descriptive messages
+5. Push to your branch
+6. Create a pull request
 
 ## License
 
@@ -148,8 +314,9 @@ This project is currently in early development. Contribution guidelines will be 
 
 ---
 
-**Status**: 🔨 In Development
-**Version**: 0.0.1-alpha
-**Last Updated**: October 2025
+**Status**: � Still in Development  
+**Version**: 0.1.0-alpha  
+**Last Updated**: October 30, 2025  
+**Repository**: [github.com/abner-dos-reis/ai-feed-rss](https://github.com/abner-dos-reis/ai-feed-rss)
 
-For questions or suggestions, please open an issue in this repository.
+For questions, suggestions, or bug reports, please open an issue in this repository.

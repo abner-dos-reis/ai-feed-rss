@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard';
 import AddFeedModal from './components/AddFeedModal';
 import ManageAPIsModal from './components/ManageAPIsModal';
 import LoginSessionsModal from './components/LoginSessionsModal';
+import ConfigModal from './components/ConfigModal';
 
 // Create QueryClient
 const queryClient = new QueryClient({
@@ -60,6 +61,7 @@ function App() {
   const [addFeedOpen, setAddFeedOpen] = useState(false);
   const [manageAPIsOpen, setManageAPIsOpen] = useState(false);
   const [loginSessionsOpen, setLoginSessionsOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [feeds, setFeeds] = useState([]);
 
   // Load feeds from localStorage on mount
@@ -91,6 +93,7 @@ function App() {
               onAddFeed={() => setAddFeedOpen(true)}
               onManageAPIs={() => setManageAPIsOpen(true)}
               onLoginSessions={() => setLoginSessionsOpen(true)}
+              onConfig={() => setConfigOpen(true)}
             />
             
             <Box 
@@ -124,6 +127,11 @@ function App() {
           <LoginSessionsModal
             open={loginSessionsOpen}
             onClose={() => setLoginSessionsOpen(false)}
+          />
+
+          <ConfigModal
+            open={configOpen}
+            onClose={() => setConfigOpen(false)}
           />
         </Router>
       </ThemeProvider>

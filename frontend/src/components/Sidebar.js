@@ -24,10 +24,11 @@ import {
   Login as LoginIcon,
   Send as SendIcon,
   AutoAwesome as AIIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  Settings as SettingsIcon
 } from '@mui/icons-material';
 
-const Sidebar = ({ open, onClose, onAddFeed, onManageAPIs, onLoginSessions }) => {
+const Sidebar = ({ open, onClose, onAddFeed, onManageAPIs, onLoginSessions, onConfig }) => {
   const drawerWidth = 280;
   const [chatMessages, setChatMessages] = useState([
     {
@@ -49,8 +50,8 @@ const Sidebar = ({ open, onClose, onAddFeed, onManageAPIs, onLoginSessions }) =>
   }, [chatMessages]);
 
   const callAI = async (userMessage) => {
-    // Get APIs from localStorage
-    const apiKeys = JSON.parse(localStorage.getItem('apiKeys') || '{}');
+    // Get APIs from localStorage (correct key name)
+    const apiKeys = JSON.parse(localStorage.getItem('aiApiKeys') || '{}');
     
     // Priority: OpenAI > Gemini > Claude > Perplexity
     let apiKey = null;
@@ -117,7 +118,7 @@ Be concise, insightful, and focus on actionable recommendations. Always consider
         return data.choices[0].message.content;
 
       } else if (provider === 'gemini') {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -244,6 +245,12 @@ Be concise, insightful, and focus on actionable recommendations. Always consider
       icon: <LoginIcon />,
       onClick: onLoginSessions,
       color: '#8b5cf6'
+    },
+    {
+      text: 'Config',
+      icon: <SettingsIcon />,
+      onClick: onConfig,
+      color: '#f59e0b'
     }
   ];
 
