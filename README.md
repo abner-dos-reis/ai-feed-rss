@@ -15,10 +15,10 @@ AI FeedRSS is an intelligent RSS feed aggregator with AI-powered chat assistance
 ## Screenshots
 
 ### Main Dashboard
-![Dashboard Screenshot](public/Screenshot1.png)
+![Dashboard Screenshot](public/Screenshot2.png)
 
 ### AI Chat Interface
-![AI Chat Screenshot](public/Screenshot2.png)
+![AI Chat Screenshot](public/Screenshot3.png)
 
 ## Features
 
@@ -246,77 +246,6 @@ localStorage['userPreferences'] = {
 }
 ```
 
-## Roadmap
-
-### ✅ Completed Features
-- [x] Docker multi-service architecture (5 containers)
-- [x] Dark theme UI with Material-UI
-- [x] RSS feed management (add, view, manage)
-- [x] Single and bulk feed import
-- [x] Backend RSS proxy to handle CORS
-- [x] AI chat integration (4 providers)
-- [x] Feed article viewer with search
-- [x] AI-powered article search
-- [x] Persistent localStorage for feeds and articles
-- [x] API key management modal
-- [x] Dashboard with multiple filter views (Hot, All, By Site, By Category)
-
-### 🚧 In Progress
-- [ ] AI-based category organization
-- [ ] Feed filtering by category
-- [ ] Config modal functionality
-- [ ] Enhanced error handling and validation
-- [ ] User authentication and sessions
-- [ ] Database persistence (currently localStorage only)
-
-### 📋 Planned Features
-- [ ] Export/import feed configurations
-- [ ] Feed update scheduling
-- [ ] Article bookmarking and favorites
-- [ ] Reading history tracking
-- [ ] Custom RSS feed creation
-- [ ] Mobile app version
-- [ ] Browser extension
-- [ ] Email digest notifications
-- [ ] Multi-language support
-- [ ] Themes customization
-
-## Known Issues
-
-- RSS feed extraction may fail for some feeds due to varying XML formats
-- AI chat requires at least one configured API key
-- Bulk import processing may be slow for many feeds
-- No data persistence beyond localStorage (cleared on browser cache clear)
-- Category filtering is not yet AI-powered
-
-## Performance Notes
-
-- Docker build time optimized using `COPY --chown` instead of `chown -R`
-- Frontend uses React.memo and efficient re-rendering strategies
-- Backend RSS proxy uses async httpx for non-blocking requests
-- localStorage provides instant load times (no API calls on startup)
-
-## Contributing
-
-This project is currently in active development. Contribution guidelines will be established once the core functionality is stable.
-
-### Development Workflow
-1. Create a feature branch from `main`
-2. Make your changes
-3. Test locally with `make dev`
-4. Commit with descriptive messages
-5. Push to your branch
-6. Create a pull request
-
 ## License
 
-*License information will be added soon*
-
----
-
-**Status**: � Still in Development  
-**Version**: 0.1.0-alpha  
-**Last Updated**: October 30, 2025  
-**Repository**: [github.com/abner-dos-reis/ai-feed-rss](https://github.com/abner-dos-reis/ai-feed-rss)
-
-For questions, suggestions, or bug reports, please open an issue in this repository.
+MIT
