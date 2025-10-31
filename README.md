@@ -206,46 +206,6 @@ ai-feed-rss/
 - Uses httpx.AsyncClient with 30s timeout
 - Custom User-Agent: 'Mozilla/5.0 (compatible; AI-Feed-RSS/1.0)'
 
-### localStorage Schema
-
-```javascript
-// Feed list
-localStorage['feeds'] = [
-  {
-    id: "unique-id",
-    url: "https://example.com/rss",
-    name: "Feed Name",
-    itemCount: 42,
-    isActive: true
-  }
-]
-
-// Articles by feed URL
-localStorage['feedArticles'] = {
-  "https://example.com/rss": [
-    {
-      title: "Article Title",
-      description: "Article description...",
-      link: "https://example.com/article",
-      pubDate: "2025-10-30T12:00:00Z"
-    }
-  ]
-}
-
-// AI API Keys
-localStorage['aiApiKeys'] = {
-  openai: "sk-...",
-  gemini: "AIza...",
-  claude: "sk-ant-...",
-  perplexity: "pplx-..."
-}
-
-// User preferences for Hot feed
-localStorage['userPreferences'] = {
-  selectedTopics: ["technology", "science"]
-}
-```
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
