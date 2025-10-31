@@ -18,7 +18,7 @@ AI FeedRSS is an intelligent RSS feed aggregator with AI-powered chat assistance
 ![Dashboard Screenshot](public/Screenshot2.png)
 
 ### AI Chat Interface
-![AI Chat Screenshot](public/Screenshot3.png)
+![AI Chat Screenshot](public/Screenshot1.png)
 
 ## Features
 
