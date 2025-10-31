@@ -9,17 +9,19 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+# Create non-root user first
+RUN useradd -m -u 1001 appuser
+
+# Copy requirements and install as root, then change ownership
+COPY --chown=appuser:appuser requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+# Copy application code with correct ownership from the start
+COPY --chown=appuser:appuser . .
 
-# Create non-root user
-RUN useradd -m -u 1001 appuser && chown -R appuser:appuser /app
+# Switch to non-root user
 USER appuser
 
 # Expose port

@@ -18,6 +18,7 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
   const [feedUrl, setFeedUrl] = useState('');
   const [feedName, setFeedName] = useState('');
   const [autoDetectedName, setAutoDetectedName] = useState('');
+  const [itemCount, setItemCount] = useState(0);
   const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
 
@@ -55,6 +56,10 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
                   xmlDoc.querySelector('feed > title')?.textContent ||
                   '';
 
+      // Count items in feed
+      const items = xmlDoc.querySelectorAll('item, entry');
+      setItemCount(items.length);
+
       if (title) {
         setAutoDetectedName(title.trim());
       } else {
@@ -72,6 +77,7 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
     const url = e.target.value;
     setFeedUrl(url);
     setAutoDetectedName('');
+    setItemCount(0);
     
     // Auto-detect when URL looks complete
     if (url.includes('http') && (url.includes('rss') || url.includes('feed') || url.includes('xml'))) {
@@ -82,10 +88,15 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
   const handleSave = () => {
     if (feedUrl.trim()) {
       const finalName = feedName.trim() || autoDetectedName || 'Unnamed Feed';
-      onSave({ url: feedUrl, name: finalName });
+      onSave({ 
+        url: feedUrl, 
+        name: finalName,
+        itemCount: itemCount 
+      });
       setFeedUrl('');
       setFeedName('');
       setAutoDetectedName('');
+      setItemCount(0);
       setError('');
       onClose();
     }
@@ -95,6 +106,7 @@ const AddFeedModal = ({ open, onClose, onSave }) => {
     setFeedUrl('');
     setFeedName('');
     setAutoDetectedName('');
+    setItemCount(0);
     setError('');
     onClose();
   };

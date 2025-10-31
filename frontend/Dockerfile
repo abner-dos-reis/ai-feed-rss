@@ -6,20 +6,21 @@ WORKDIR /app
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Copy package files
-COPY package*.json ./
+# Create non-root user first
+RUN addgroup -g 1001 appuser 2>/dev/null || true && \
+    adduser -u 1001 -G appuser -s /bin/sh -D appuser 2>/dev/null || true
+
+# Copy package files and install as root, then change ownership
+COPY --chown=appuser:appuser package*.json ./
+
+# Switch to appuser before npm install
+USER appuser
 
 # Install dependencies
 RUN npm install
 
-# Copy application code
-COPY . .
-
-# Create non-root user (handle existing group)
-RUN addgroup -g 1001 appuser || true
-RUN adduser -u 1001 -G appuser -s /bin/sh -D appuser 2>/dev/null || adduser -u 1001 -g 1001 -s /bin/sh -D appuser
-RUN chown -R appuser:appuser /app
-USER appuser
+# Copy application code (already owned by appuser)
+COPY --chown=appuser:appuser . .
 
 # Expose port
 EXPOSE 3000

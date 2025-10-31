@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 // Components
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import Dashboard from './components/Dashboard';
 import AddFeedModal from './components/AddFeedModal';
 import ManageAPIsModal from './components/ManageAPIsModal';
 import LoginSessionsModal from './components/LoginSessionsModal';
@@ -59,11 +60,21 @@ function App() {
   const [addFeedOpen, setAddFeedOpen] = useState(false);
   const [manageAPIsOpen, setManageAPIsOpen] = useState(false);
   const [loginSessionsOpen, setLoginSessionsOpen] = useState(false);
+  const [feeds, setFeeds] = useState([]);
+
+  // Load feeds from localStorage on mount
+  useEffect(() => {
+    const storedFeeds = localStorage.getItem('feeds');
+    if (storedFeeds) {
+      setFeeds(JSON.parse(storedFeeds));
+    }
+  }, []);
 
   const handleSaveFeed = (feed) => {
     console.log('Feed saved:', feed);
-    // TODO: Send to backend
-    alert(`Feed added: ${feed.name}`);
+    const updatedFeeds = [...feeds, { ...feed, id: Date.now() }];
+    setFeeds(updatedFeeds);
+    localStorage.setItem('feeds', JSON.stringify(updatedFeeds));
   };
 
   return (
@@ -88,27 +99,13 @@ function App() {
                 flexGrow: 1, 
                 p: 3, 
                 mt: 8, // Account for header height
-                ml: sidebarOpen ? '280px' : 0,
+                ml: sidebarOpen ? '280px' : '60px', // Keep some space when closed
                 transition: 'margin 0.3s',
                 backgroundColor: 'background.default',
                 minHeight: '100vh'
               }}
             >
-              <Box sx={{ textAlign: 'center', mt: 10 }}>
-                <Box
-                  component="img"
-                  src="https://cdn-icons-png.flaticon.com/512/2921/2921822.png"
-                  alt="RSS"
-                  sx={{ width: 120, height: 120, mb: 3, opacity: 0.6 }}
-                />
-                <Box sx={{ fontSize: '4rem', mb: 2 }}>📡</Box>
-                <Box sx={{ fontSize: '2rem', fontWeight: 700, mb: 2 }}>
-                  Welcome to AI Feed RSS
-                </Box>
-                <Box sx={{ fontSize: '1.2rem', color: 'text.secondary' }}>
-                  Use the sidebar to add feeds, manage APIs, and configure login sessions
-                </Box>
-              </Box>
+              <Dashboard feeds={feeds} />
             </Box>
           </Box>
 
